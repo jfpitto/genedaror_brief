@@ -23,7 +23,7 @@ detalle = st.text_area("Detalle del requerimiento *")
 nombre_usuario = st.text_input("Nombre del Usuario *")
 gerente = st.text_input("Nombre del Gerente del área *")
 
-# ✅ NUEVO: subir múltiples imágenes
+# ✅ Subir múltiples imágenes
 imagenes = st.file_uploader(
     "Subir imágenes (opcional)",
     type=["png", "jpg", "jpeg"],
@@ -42,19 +42,13 @@ if st.button("🚀 Generar BRIEF"):
     else:
         doc = DocxTemplate("template_brief.docx")
 
-        # ✅ PROCESAR IMÁGENES
-        lista_imagenes = []
+        # ✅ PROCESAR IMÁGENES (correcto)
+        imagenes_render = []
 
         if imagenes:
             for img in imagenes:
-                image = InlineImage(doc, img, width=Mm(120))  # ajustar tamaño
-                lista_imagenes.append(image)
-
-            # ✅ Unir con salto de línea (una debajo de otra)
-            imagenes_render = "\n".join(["{{imagen_item}}"] * len(lista_imagenes))
-        else:
-            lista_imagenes = []
-            imagenes_render = ""
+                imagen_word = InlineImage(doc, img, width=Mm(120))
+                imagenes_render.append(imagen_word)
 
         # ✅ CONTEXTO
         context = {
@@ -68,7 +62,7 @@ if st.button("🚀 Generar BRIEF"):
             "detalle": detalle,
             "nombre_usuario": nombre_usuario,
             "gerente": gerente,
-            "imagen": lista_imagenes if lista_imagenes else ""
+            "imagenes": imagenes_render  # ✅ clave correcta
         }
 
         doc.render(context)
