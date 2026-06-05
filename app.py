@@ -33,6 +33,9 @@ detalle = st.text_area("Detalle del requerimiento *")
 
 riesgo = st.text_area("¿Cuál es el riesgo de NO implementar esta solución? *")
 
+# ✅ NUEVO CAMPO
+nombre_app = st.text_input("Nombre de la aplicación impactada *")
+
 gerente = st.text_input("Nombre del Gerente del área *")
 
 # ✅ Subir múltiples imágenes
@@ -51,13 +54,12 @@ if st.button("🚀 Generar BRIEF"):
     if not all([
         helppeople, iniciativa, descripcion_iniciativa, objetivo,
         usuario, unidad, beneficio, problema,
-        areas_roles, detalle, riesgo, gerente
+        areas_roles, detalle, riesgo, nombre_app, gerente
     ]):
         st.error("⚠️ Completa todos los campos obligatorios (*)")
     else:
         doc = DocxTemplate("template_brief.docx")
 
-        # ✅ PROCESAR IMÁGENES
         imagenes_render = []
 
         if imagenes:
@@ -65,7 +67,6 @@ if st.button("🚀 Generar BRIEF"):
                 imagen_word = InlineImage(doc, img, width=Mm(120))
                 imagenes_render.append(imagen_word)
 
-        # ✅ CONTEXTO
         context = {
             "helppeople": helppeople,
             "fecha": fecha_str,
@@ -79,6 +80,7 @@ if st.button("🚀 Generar BRIEF"):
             "areas_roles": areas_roles,
             "detalle": detalle,
             "riesgo": riesgo,
+            "nombre_app": nombre_app,  # ✅ agregado
             "gerente": gerente,
             "imagenes": imagenes_render
         }
